@@ -1,0 +1,7 @@
+const ADD_EMAIL = 'ADD_EMAIL';
+
+const ADD_USERNAME = 'ADD_USERNAME';
+
+const ADD_SCORE = 'ADD_SCORE';
+
+export { ADD_USERNAME, ADD_EMAIL, ADD_SCORE };
