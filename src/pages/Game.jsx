@@ -4,10 +4,11 @@ import QuestionCard from '../components/QuestionCard';
 
 class Game extends Component {
   render() {
+    const { history } = this.props;
     return (
       <>
         <Header />
-        <QuestionCard />
+        <QuestionCard history={ history } />
       </>
     );
   }

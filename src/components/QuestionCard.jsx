@@ -6,7 +6,8 @@ class QuestionCard extends Component {
   state = {
     responseCode: '',
     questions: [],
-    // arrayIndex: 0,
+    arrayIndex: null,
+    answer: [],
   };
 
   async componentDidMount() {
@@ -14,21 +15,10 @@ class QuestionCard extends Component {
     this.setState({
       responseCode: resultApi.response_code,
       questions: resultApi.results,
-
-      // Aqui tentei fazer a question receber seus respectivos itens, pois
-      // achei que daria pra fazer o questions[arrayIndex].category
-      // porém da erro pois o valor inicial é um [], e não consegui fazer
-      // ele esperar a resposta da api pra rodar
-
-      // questions: resultApi.results.map((question) => ({
-      //   category: question.category,
-      //   type: question.type,
-      //   difficulty: question.difficulty,
-      //   question: question.question,
-      //   correctAnswer: question.correct_answer,
-      //   incorrectAnswers: question.incorrect_answers,
-      // })),
+      answer: [resultApi.results.correct_answer, resultApi.results.incorrect_answers],
+      arrayIndex: resultApi.results.length > 0 ? 0 : null,
     }, this.verifyToken);
+    // console.log(this.state);
   }
 
   verifyToken = () => {
@@ -41,29 +31,37 @@ class QuestionCard extends Component {
   };
 
   render() {
-    const { questions } = this.state;
-    // console.log(questions[arrayIndex].category);
+    const { questions, arrayIndex, answer } = this.state;
+    if (arrayIndex === null) {
+      return (
+        console.log('carregando')
+      );
+    }
     return (
       <main>
         QuestionCard
-        <div>
-          {questions.map((question, index) => (
-            <div key={ index }>
-              <p data-testid="question-category">
-                { question.category }
-              </p>
-              <p data-testid="question-text">
-                { question.question }
-              </p>
-              <button data-testid="correct-answer">
-                { question.correct_answer }
-              </button>
-              { question.incorrect_answers.map((incorrectAnswer, index2) => (
-                <button key={ index2 } data-testid={ `wrong-answer-${index2}` }>
-                  { incorrectAnswer }
-                </button>
-              ))}
-            </div>
+
+        <p data-testid="question-category">
+          { questions[arrayIndex].category }
+        </p>
+
+        <p data-testid="question-text">
+          { questions[arrayIndex].question }
+        </p>
+
+        <p>
+          { answer }
+        </p>
+
+        <div data-testid="answer-options">
+          <button data-testid="correct-answer">
+            { questions[arrayIndex].correct_answer }
+          </button>
+
+          { questions[arrayIndex].incorrect_answers.map((incorrectAnswer, index) => (
+            <button key={ index } data-testid={ `wrong-answer-${index}` }>
+              { incorrectAnswer }
+            </button>
           ))}
         </div>
       </main>
