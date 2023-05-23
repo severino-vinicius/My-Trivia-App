@@ -6,47 +6,39 @@ class QuestionCard extends Component {
   state = {
     responseCode: '',
     questions: [],
-    arrayIndex: null,
+    arrayIndex: 0,
     answer: [],
   };
 
-  async componentDidMount() {
-    const resultApi = await getTriviaRequestApi();
-    this.setState({
-      responseCode: resultApi.response_code,
-      questions: resultApi.results,
-      answer: [resultApi.results.correct_answer, resultApi.results.incorrect_answers],
-      arrayIndex: resultApi.results.length > 0 ? 0 : null,
-    }, this.verifyToken);
-    // console.log(this.state);
-  }
-
-  verifyToken = () => {
-    const { history } = this.props;
-    const { responseCode } = this.state;
-    const timeLimitToken = 3;
-    if (responseCode === timeLimitToken) {
-      history.push('/');
+  shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
   };
 
   render() {
-    const { questions, arrayIndex, answer } = this.state;
-    if (arrayIndex === null) {
-      return (
-        console.log('carregando')
-      );
-    }
+    const { questions, questionCurrency } = this.props;
+    const { arrayIndex, answer } = this.state;
+
+    console.log(questions);
+    console.log(questions);
+    const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
+
+    const randomizeAwnsers = this.shuffleArray(allAwnsers);
+    console.log(randomizeAwnsers);
+
     return (
       <main>
         QuestionCard
 
         <p data-testid="question-category">
-          { questions[arrayIndex].category }
+          { questions.category }
         </p>
 
         <p data-testid="question-text">
-          { questions[arrayIndex].question }
+          { questions.question }
         </p>
 
         <p>
@@ -54,15 +46,17 @@ class QuestionCard extends Component {
         </p>
 
         <div data-testid="answer-options">
-          <button data-testid="correct-answer">
-            { questions[arrayIndex].correct_answer }
-          </button>
-
-          { questions[arrayIndex].incorrect_answers.map((incorrectAnswer, index) => (
-            <button key={ index } data-testid={ `wrong-answer-${index}` }>
-              { incorrectAnswer }
-            </button>
-          ))}
+          {randomizeAwnsers.map((element, index) => {
+            const conditionalCorrectAnwnser = questions.correct_answer === element;
+            return (
+              <button
+                data-testid={ conditionalCorrectAnwnser ? "correct-answer" : `wrong-answer-${questionCurrency}` }
+                key={ index }
+              >
+                { conditionalCorrectAnwnser ? questions.correct_answer : element }
+              </button>
+            );
+          })}
         </div>
       </main>
     );
