@@ -1,9 +1,9 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 import Login from '../../pages/Login';
 import { renderWithRouterAndRedux } from './renderWithRouterAndRedux';
+import App from '../../App';
 
 describe('Testes do componente Login.jsx', () => {
   test('Requisito 1', () => {
@@ -20,7 +20,7 @@ describe('Testes do componente Login.jsx', () => {
     expect(buttonPlay).toBeEnabled();
   });
   test('Requisito 2', async () => {
-    const { history } = renderWithRouterAndRedux(<Login />);
+    const { history } = renderWithRouterAndRedux(<App />);
     const inputName = screen.getByTestId('input-player-name');
     const inputEmail = screen.getByTestId('input-gravatar-email');
     userEvent.type(inputEmail, 'xxx@gmail.com');
@@ -29,14 +29,15 @@ describe('Testes do componente Login.jsx', () => {
     userEvent.click(buttonPlay);
     waitFor(() => {
       expect(history.location.pathname).toBe('/Game');
+      console.log(history.location.pathname);
     });
   });
   test('Requisito 3', async () => {
-    const { history } = renderWithRouterAndRedux(<Login />);
+    const { history } = renderWithRouterAndRedux(<App />);
     const buttonSettings = screen.getByTestId('btn-settings');
     expect(buttonSettings).toBeInTheDocument();
     userEvent.click(buttonSettings);
-    await waitFor(() => {
+    waitFor(() => {
       expect(history.location.pathname).toBe('/Settings');
     });
   });
