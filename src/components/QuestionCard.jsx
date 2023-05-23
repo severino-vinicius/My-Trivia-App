@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import getTriviaRequestApi from '../services/triviaRequestApi';
 
 class QuestionCard extends Component {
   state = {
-    responseCode: '',
-    questions: [],
-    arrayIndex: 0,
     answer: [],
   };
 
   shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
+    for (let i = array.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
@@ -20,14 +16,11 @@ class QuestionCard extends Component {
 
   render() {
     const { questions, questionCurrency } = this.props;
-    const { arrayIndex, answer } = this.state;
+    const { answer } = this.state;
 
-    console.log(questions);
-    console.log(questions);
     const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
 
     const randomizeAwnsers = this.shuffleArray(allAwnsers);
-    console.log(randomizeAwnsers);
 
     return (
       <main>
@@ -50,7 +43,8 @@ class QuestionCard extends Component {
             const conditionalCorrectAnwnser = questions.correct_answer === element;
             return (
               <button
-                data-testid={ conditionalCorrectAnwnser ? "correct-answer" : `wrong-answer-${questionCurrency}` }
+                data-testid={ conditionalCorrectAnwnser
+                  ? 'correct-answer' : `wrong-answer-${questionCurrency}` }
                 key={ index }
               >
                 { conditionalCorrectAnwnser ? questions.correct_answer : element }
@@ -64,9 +58,13 @@ class QuestionCard extends Component {
 }
 
 QuestionCard.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func,
+  questions: PropTypes.shape({
+    category: PropTypes.string.isRequired,
+    question: PropTypes.string.isRequired,
+    correct_answer: PropTypes.string.isRequired,
+    incorrect_answers: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
+  questionCurrency: PropTypes.number.isRequired,
 };
 
 export default QuestionCard;

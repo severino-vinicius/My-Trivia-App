@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
 import getTriviaRequestApi from '../services/triviaRequestApi';
@@ -6,32 +7,31 @@ import getTriviaRequestApi from '../services/triviaRequestApi';
 class Game extends Component {
   state = {
     questions: [],
-    responseCode: null,
     questionCurrency: 0,
   };
 
   async componentDidMount() {
-    const resultApi = await getTriviaRequestApi();
-    console.log(resultApi);
-    this.setState({
-      questions: resultApi.results,
-    }, this.verifyToken());
-  }
-
-  verifyToken = () => {
     const { history } = this.props;
-    const { responseCode } = this.state;
-    const timeLimitToken = 3;
-    if (responseCode === timeLimitToken) {
-      history.push('/');
+    const getTokenLs = localStorage.getItem('token');
+    const invalidToken = 3;
+    try {
+      const resultApi = await getTriviaRequestApi(getTokenLs);
+      const { response_code: responseCode, results } = resultApi;
+      if (responseCode === invalidToken) {
+        localStorage.removeItem('token');
+        history.push('/');
+      }
+      this.setState({
+        questions: results,
+      });
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
 
   render() {
     const { questions, questionCurrency } = this.state;
     const { history } = this.props;
-    console.log(questions);
-    console.log(!questions.length > 0);
     return (
       <>
         <Header />
@@ -47,5 +47,11 @@ class Game extends Component {
     );
   }
 }
+
+Game.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Game;
