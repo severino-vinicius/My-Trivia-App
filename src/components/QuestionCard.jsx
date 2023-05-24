@@ -38,7 +38,6 @@ class QuestionCard extends Component {
   };
 
   render() {
-
     const { questions, questionCurrency, nextQuestion, timeOutGame } = this.props;
     const { answer, classNameWrong, classNameRight, nextButton } = this.state;
 
