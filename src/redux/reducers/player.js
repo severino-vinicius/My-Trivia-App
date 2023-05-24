@@ -25,7 +25,7 @@ const playerReducer = (state = INITIAL_STATE, action) => {
   case SAVE_PLAYER_TIME:
     return { ...state, time: action.payload };
   case SAVE_PLAYER_SCORE:
-    return { ...state, score: action.payload };
+    return { ...state, score: state.score + action.payload };
   case SAVE_PLAYER_ASSERTIONS:
     return { ...state, assertions: state.assertions + action.payload };
   default:
