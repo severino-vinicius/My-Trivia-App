@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { timeOutGame } from '../redux/actions';
 
+const milliSecond = 1000;
 class Timer extends Component {
   state = {
     time: 30,
@@ -11,20 +13,16 @@ class Timer extends Component {
     this.startTimer();
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
   startTimer = () => {
-    const milliSecond = 1000;
-    const { time } = this.state;
     const { dispatch } = this.props;
     const timerID = setInterval(() => {
-      if (time === 0) {
-        dispatch(timeOutGame(true));
-      } else {
-        this.setState((prevstate) => ({ time: prevstate.time - 1 }));
-      }
+      const { time } = this.state;
+      this.setState((prevState) => ({ time: prevState.time - 1 }), () => {
+        if (time === 0) {
+          clearInterval(timerID);
+          dispatch(timeOutGame(true));
+        }
+      });
     }, milliSecond);
   };
 
@@ -39,5 +37,11 @@ class Timer extends Component {
     );
   }
 }
+Timer.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 export default connect()(Timer);
