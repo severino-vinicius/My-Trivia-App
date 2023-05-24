@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import QuestionCard from '../components/QuestionCard';
 import getTriviaRequestApi from '../services/triviaRequestApi';
 
+const five = 5;
 class Game extends Component {
   state = {
     questions: [],
@@ -29,6 +30,16 @@ class Game extends Component {
     }
   }
 
+  nextQuestion = () => {
+    const { questionCurrency } = this.state;
+    if (questionCurrency < five) {
+      // Atualiza o estado incrementando em 1
+      this.setState({
+        questionCurrency: questionCurrency + 1,
+      });
+    }
+  };
+
   render() {
     const { questions, questionCurrency } = this.state;
     const { history } = this.props;
@@ -41,6 +52,7 @@ class Game extends Component {
               history={ history }
               questions={ questions[questionCurrency] }
               questionCurrency={ questionCurrency }
+              nextQuestion={ this.nextQuestion }
             />)}
 
       </>
