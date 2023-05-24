@@ -1,6 +1,8 @@
 import { ADD_EMAIL,
-  ADD_SCORE,
-  ADD_USERNAME, TIMEOUT_GAME, SAVE_PLAYER_TIME, SAVE_PLAYER_SCORE } from './actionTypes';
+  ADD_USERNAME, TIMEOUT_GAME,
+  SAVE_PLAYER_TIME,
+  SAVE_PLAYER_SCORE,
+  SAVE_PLAYER_ASSERTIONS } from './actionTypes';
 
 export const addEmail = (userEmail) => ({
   type: ADD_EMAIL,
@@ -30,4 +32,9 @@ export const saveCountTimer = (count) => ({
 export const savePlayerScore = (score) => ({
   type: SAVE_PLAYER_SCORE,
   payload: score,
+});
+
+export const savePlayerAssertions = (assertions) => ({
+  type: SAVE_PLAYER_ASSERTIONS,
+  payload: assertions,
 });

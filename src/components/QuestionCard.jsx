@@ -2,17 +2,48 @@ import React, { Component } from 'react';
 import './QuestionCard.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Timer from './Timer';
-import { savePlayerScore } from '../redux/actions';
+import { saveCountTimer,
+  savePlayerAssertions,
+  savePlayerScore,
+  timeOutGame } from '../redux/actions';
 
-const four = 4;
 const ten = 10;
+const milliSecond = 1000;
 class QuestionCard extends Component {
   state = {
     answer: [],
     classNameWrong: '',
     classNameRight: '',
     nextButton: 'off',
+    time: 0,
+  };
+
+  componentDidMount() {
+    const seconds = 30;
+    this.startTimer(seconds);
+  }
+
+  startTimer = (seconds) => {
+    this.setState({
+      time: seconds,
+    });
+    const { dispatch } = this.props;
+    this.timerID = setInterval(() => {
+      const { time } = this.state;
+      dispatch(saveCountTimer(time));
+      this.setState((prevState) => ({ time: prevState.time - 1 }), () => {
+        if (time === 1) {
+          clearInterval(this.timerID);
+          dispatch(timeOutGame(true));
+        }
+      });
+    }, milliSecond);
+  };
+
+  timeReset = () => {
+    clearInterval(this.timerID);
+    const seconds = 30;
+    this.startTimer(seconds);
   };
 
   wrongOrRight = (element) => {
@@ -23,19 +54,23 @@ class QuestionCard extends Component {
       nextButton: 'on',
     });
     if (element === questions.correct_answer) {
+      // dispatch(savePlayerAssertions(1));
       const { time } = this.props;
       if (questions.difficulty === 'medium') {
         const count = ten + (time * 2);
         dispatch(savePlayerScore(count));
+        dispatch(savePlayerAssertions(1));
       }
       if (questions.difficulty === 'easy') {
         const count = ten + (time * 1);
         dispatch(savePlayerScore(count));
+        dispatch(savePlayerAssertions(1));
       }
       if (questions.difficulty === 'hard') {
         const three = 3;
         const count = ten + (time * three);
         dispatch(savePlayerScore(count));
+        dispatch(savePlayerAssertions(1));
       }
       console.log(questions.difficulty);
     }
@@ -51,16 +86,19 @@ class QuestionCard extends Component {
 
   render() {
     const { questions,
-      questionCurrency, nextQuestion, timeOutGame, randomizerAnwsers } = this.props;
+      questionCurrency, nextQuestion, timeOutGames, randomizerAnwsers } = this.props;
     const { answer,
       classNameWrong,
       classNameRight,
       nextButton,
+      time,
     } = this.state;
 
     return (
       <main>
-        <Timer />
+        <p>
+          {time}
+        </p>
         <p data-testid="question-category">
           { questions.category }
         </p>
@@ -78,11 +116,14 @@ class QuestionCard extends Component {
             const conditionalCorrectAnwnser = questions.correct_answer === element;
             return (
               <button
-                disabled={ timeOutGame }
+                disabled={ timeOutGames }
                 data-testid={ conditionalCorrectAnwnser
                   ? 'correct-answer' : `wrong-answer-${questionCurrency}` }
                 key={ index }
-                onClick={ () => { this.wrongOrRight(element); } }
+                onClick={ () => {
+                  this.wrongOrRight(element);
+                  clearInterval(this.timerID);
+                } }
                 className={ conditionalCorrectAnwnser ? classNameRight : classNameWrong }
               >
                 { conditionalCorrectAnwnser ? questions.correct_answer : element }
@@ -93,8 +134,11 @@ class QuestionCard extends Component {
             && (
               <button
                 data-testid="btn-next"
-                onClick={ () => { nextQuestion(); this.clearClass(); } }
-                disabled={ questionCurrency >= four }
+                onClick={ () => {
+                  nextQuestion();
+                  this.clearClass();
+                  this.timeReset();
+                } }
               >
                 Next
               </button>
@@ -113,7 +157,7 @@ QuestionCard.propTypes = {
     difficulty: PropTypes.string.isRequired,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
-  timeOutGame: PropTypes.bool.isRequired,
+  timeOutGames: PropTypes.bool.isRequired,
   randomizerAnwsers: PropTypes.arrayOf(PropTypes.string).isRequired,
   questionCurrency: PropTypes.number.isRequired,
   nextQuestion: PropTypes.func.isRequired,
