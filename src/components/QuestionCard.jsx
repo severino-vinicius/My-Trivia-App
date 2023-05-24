@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Timer from './Timer';
 
 class QuestionCard extends Component {
   state = {
@@ -15,7 +17,7 @@ class QuestionCard extends Component {
   };
 
   render() {
-    const { questions, questionCurrency } = this.props;
+    const { questions, questionCurrency, timeOutGame } = this.props;
     const { answer } = this.state;
 
     const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
@@ -25,7 +27,7 @@ class QuestionCard extends Component {
     return (
       <main>
         QuestionCard
-
+        <Timer />
         <p data-testid="question-category">
           { questions.category }
         </p>
@@ -43,6 +45,7 @@ class QuestionCard extends Component {
             const conditionalCorrectAnwnser = questions.correct_answer === element;
             return (
               <button
+                disabled={ timeOutGame }
                 data-testid={ conditionalCorrectAnwnser
                   ? 'correct-answer' : `wrong-answer-${questionCurrency}` }
                 key={ index }
@@ -64,7 +67,12 @@ QuestionCard.propTypes = {
     correct_answer: PropTypes.string.isRequired,
     incorrect_answers: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
+  timeOutGame: PropTypes.bool.isRequired,
   questionCurrency: PropTypes.number.isRequired,
 };
 
-export default QuestionCard;
+const mapStateToProps = (globalState) => ({
+  ...globalState.player,
+});
+
+export default connect(mapStateToProps)(QuestionCard);

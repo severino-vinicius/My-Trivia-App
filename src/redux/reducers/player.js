@@ -1,10 +1,11 @@
-import { ADD_EMAIL, ADD_SCORE, ADD_USERNAME } from '../actions/actionTypes';
+import { ADD_EMAIL, ADD_SCORE, ADD_USERNAME, TIMEOUT_GAME } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   name: '',
   assertions: '',
   score: 0,
   gravatarEmail: '',
+  timeOutGame: false,
 };
 
 const playerReducer = (state = INITIAL_STATE, action) => {
@@ -15,6 +16,8 @@ const playerReducer = (state = INITIAL_STATE, action) => {
     return { ...state, name: action.payload };
   case ADD_SCORE:
     return { ...state, score: action.payload };
+  case TIMEOUT_GAME:
+    return { ...state, timeOutGame: action.payload };
   default:
     return state;
   }
