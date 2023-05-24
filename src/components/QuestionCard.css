@@ -1,0 +1,7 @@
+.correct-question {
+    border: 3px solid rgb(6, 240, 15);
+}
+
+.wrong-question {
+    border: 3px solid red;
+}

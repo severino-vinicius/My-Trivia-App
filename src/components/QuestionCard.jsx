@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import './QuestionCard.css';
 import PropTypes from 'prop-types';
 
 class QuestionCard extends Component {
   state = {
     answer: [],
+    classNameWrong: '',
+    classNameRight: '',
   };
 
   shuffleArray = (array) => {
@@ -14,9 +17,14 @@ class QuestionCard extends Component {
     return array;
   };
 
+  wrongOrRight = () => this.setState({
+    classNameWrong: 'wrong-question',
+    classNameRight: 'correct-question',
+  });
+
   render() {
     const { questions, questionCurrency } = this.props;
-    const { answer } = this.state;
+    const { answer, classNameWrong, classNameRight } = this.state;
 
     const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
 
@@ -46,6 +54,8 @@ class QuestionCard extends Component {
                 data-testid={ conditionalCorrectAnwnser
                   ? 'correct-answer' : `wrong-answer-${questionCurrency}` }
                 key={ index }
+                onClick={ () => { this.wrongOrRight(); } }
+                className={ conditionalCorrectAnwnser ? classNameRight : classNameWrong }
               >
                 { conditionalCorrectAnwnser ? questions.correct_answer : element }
               </button>
