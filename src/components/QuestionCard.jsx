@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import './QuestionCard.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveCountTimer, savePlayerScore, timeOutGame } from '../redux/actions';
+import { saveCountTimer,
+  savePlayerAssertions,
+  savePlayerScore,
+  timeOutGame } from '../redux/actions';
 
-const four = 4;
 const ten = 10;
 const milliSecond = 1000;
 class QuestionCard extends Component {
@@ -52,19 +54,23 @@ class QuestionCard extends Component {
       nextButton: 'on',
     });
     if (element === questions.correct_answer) {
+      // dispatch(savePlayerAssertions(1));
       const { time } = this.props;
       if (questions.difficulty === 'medium') {
         const count = ten + (time * 2);
         dispatch(savePlayerScore(count));
+        dispatch(savePlayerAssertions(1));
       }
       if (questions.difficulty === 'easy') {
         const count = ten + (time * 1);
         dispatch(savePlayerScore(count));
+        dispatch(savePlayerAssertions(1));
       }
       if (questions.difficulty === 'hard') {
         const three = 3;
         const count = ten + (time * three);
         dispatch(savePlayerScore(count));
+        dispatch(savePlayerAssertions(1));
       }
       console.log(questions.difficulty);
     }
@@ -130,7 +136,6 @@ class QuestionCard extends Component {
                   this.clearClass();
                   this.timeReset();
                 } }
-                disabled={ questionCurrency >= four }
               >
                 Next
               </button>
