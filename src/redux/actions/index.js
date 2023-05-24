@@ -1,4 +1,4 @@
-import { ADD_EMAIL, ADD_SCORE, ADD_USERNAME } from './actionTypes';
+import { ADD_EMAIL, ADD_SCORE, ADD_USERNAME, TIMEOUT_GAME } from './actionTypes';
 
 export const addEmail = (userEmail) => ({
   type: ADD_EMAIL,
@@ -13,4 +13,9 @@ export const addUserName = (userName) => ({
 export const addScore = (userScore) => ({
   type: ADD_SCORE,
   payload: userScore,
+});
+
+export const timeOutGame = (timeOut) => ({
+  type: TIMEOUT_GAME,
+  payload: timeOut,
 });
