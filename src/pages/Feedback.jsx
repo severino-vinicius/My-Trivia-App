@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
+import GenericBtn from '../components/GenericBtn';
 
 class Feedback extends Component {
   render() {
@@ -33,6 +35,12 @@ class Feedback extends Component {
             pontos.
           </p>
         </div>
+        <Link to="/">
+          <GenericBtn
+            buttonContent="Play Again"
+            buttonDataTestid="btn-play-again"
+          />
+        </Link>
       </section>
     );
   }
