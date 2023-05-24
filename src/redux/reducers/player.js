@@ -21,7 +21,7 @@ const playerReducer = (state = INITIAL_STATE, action) => {
   case ADD_SCORE:
     return { ...state, score: action.payload };
   case TIMEOUT_GAME:
-    return { ...state, timeOutGame: action.payload };
+    return { ...state, timeOutGames: action.payload };
   case SAVE_PLAYER_TIME:
     return { ...state, time: action.payload };
   case SAVE_PLAYER_SCORE:
