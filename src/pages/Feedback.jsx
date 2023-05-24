@@ -59,7 +59,7 @@ Feedback.propTypes = {
 
 const mapStateToProps = (state) => ({
   assertionsRedux: state.player.assertions,
-  scorePlayerRedux: stateRedux.player.score,
+  scorePlayerRedux: state.player.score,
 });
 
 export default connect(mapStateToProps)(Feedback);
