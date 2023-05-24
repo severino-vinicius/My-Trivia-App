@@ -40,6 +40,19 @@ class Game extends Component {
     }
   };
 
+  shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  generateAwnsers = (questions) => {
+    const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
+    return this.shuffleArray(allAwnsers);
+  };
+
   render() {
     const { questions, questionCurrency } = this.state;
     const { history } = this.props;
@@ -53,6 +66,7 @@ class Game extends Component {
               questions={ questions[questionCurrency] }
               questionCurrency={ questionCurrency }
               nextQuestion={ this.nextQuestion }
+              randomizerAnwsers={ this.generateAwnsers(questions[questionCurrency]) }
             />)}
 
       </>

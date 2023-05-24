@@ -1,4 +1,7 @@
-import { ADD_EMAIL, ADD_SCORE, ADD_USERNAME, TIMEOUT_GAME } from '../actions/actionTypes';
+import { ADD_EMAIL,
+  ADD_SCORE,
+  ADD_USERNAME,
+  TIMEOUT_GAME, SAVE_PLAYER_TIME, SAVE_PLAYER_SCORE } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   name: '',
@@ -6,6 +9,7 @@ const INITIAL_STATE = {
   score: 0,
   gravatarEmail: '',
   timeOutGame: false,
+  time: 0,
 };
 
 const playerReducer = (state = INITIAL_STATE, action) => {
@@ -18,6 +22,10 @@ const playerReducer = (state = INITIAL_STATE, action) => {
     return { ...state, score: action.payload };
   case TIMEOUT_GAME:
     return { ...state, timeOutGame: action.payload };
+  case SAVE_PLAYER_TIME:
+    return { ...state, time: action.payload };
+  case SAVE_PLAYER_SCORE:
+    return { ...state, score: action.payload };
   default:
     return state;
   }
