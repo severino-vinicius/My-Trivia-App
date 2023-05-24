@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import './QuestionCard.css';
 import PropTypes from 'prop-types';
 
+const five = 5;
 class QuestionCard extends Component {
   state = {
     answer: [],
     classNameWrong: '',
     classNameRight: '',
+    nextButton: 'off',
   };
 
   shuffleArray = (array) => {
@@ -17,14 +19,25 @@ class QuestionCard extends Component {
     return array;
   };
 
-  wrongOrRight = () => this.setState({
-    classNameWrong: 'wrong-question',
-    classNameRight: 'correct-question',
-  });
+  wrongOrRight = () => {
+    this.setState({
+      classNameWrong: 'wrong-question',
+      classNameRight: 'correct-question',
+      nextButton: 'on',
+    });
+  };
+
+  clearClass = () => {
+    this.setState({
+      classNameWrong: '',
+      classNameRight: '',
+      nextButton: 'off',
+    });
+  };
 
   render() {
-    const { questions, questionCurrency } = this.props;
-    const { answer, classNameWrong, classNameRight } = this.state;
+    const { questions, questionCurrency, nextQuestion } = this.props;
+    const { answer, classNameWrong, classNameRight, nextButton } = this.state;
 
     const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
 
@@ -61,6 +74,16 @@ class QuestionCard extends Component {
               </button>
             );
           })}
+          {nextButton === 'on'
+            && (
+              <button
+                data-testid="btn-next"
+                onClick={ () => { nextQuestion(); this.clearClass(); } }
+                disabled={ questionCurrency >= five }
+              >
+                Next
+              </button>
+            )}
         </div>
       </main>
     );
@@ -75,6 +98,7 @@ QuestionCard.propTypes = {
     incorrect_answers: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
   questionCurrency: PropTypes.number.isRequired,
+  nextQuestion: PropTypes.func.isRequired,
 };
 
 export default QuestionCard;
