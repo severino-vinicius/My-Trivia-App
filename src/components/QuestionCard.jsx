@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
+import './QuestionCard.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Timer from './Timer';
 
+const five = 5;
 class QuestionCard extends Component {
   state = {
     answer: [],
+    classNameWrong: '',
+    classNameRight: '',
+    nextButton: 'off',
   };
 
   shuffleArray = (array) => {
@@ -16,9 +21,26 @@ class QuestionCard extends Component {
     return array;
   };
 
+  wrongOrRight = () => {
+    this.setState({
+      classNameWrong: 'wrong-question',
+      classNameRight: 'correct-question',
+      nextButton: 'on',
+    });
+  };
+
+  clearClass = () => {
+    this.setState({
+      classNameWrong: '',
+      classNameRight: '',
+      nextButton: 'off',
+    });
+  };
+
   render() {
-    const { questions, questionCurrency, timeOutGame } = this.props;
-    const { answer } = this.state;
+
+    const { questions, questionCurrency, nextQuestion, timeOutGame } = this.props;
+    const { answer, classNameWrong, classNameRight, nextButton } = this.state;
 
     const allAwnsers = [questions.correct_answer, ...questions.incorrect_answers];
 
@@ -49,11 +71,23 @@ class QuestionCard extends Component {
                 data-testid={ conditionalCorrectAnwnser
                   ? 'correct-answer' : `wrong-answer-${questionCurrency}` }
                 key={ index }
+                onClick={ () => { this.wrongOrRight(); } }
+                className={ conditionalCorrectAnwnser ? classNameRight : classNameWrong }
               >
                 { conditionalCorrectAnwnser ? questions.correct_answer : element }
               </button>
             );
           })}
+          {nextButton === 'on'
+            && (
+              <button
+                data-testid="btn-next"
+                onClick={ () => { nextQuestion(); this.clearClass(); } }
+                disabled={ questionCurrency >= five }
+              >
+                Next
+              </button>
+            )}
         </div>
       </main>
     );
@@ -69,6 +103,7 @@ QuestionCard.propTypes = {
   }).isRequired,
   timeOutGame: PropTypes.bool.isRequired,
   questionCurrency: PropTypes.number.isRequired,
+  nextQuestion: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (globalState) => ({
