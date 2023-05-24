@@ -37,8 +37,14 @@ class Feedback extends Component {
         </div>
         <Link to="/">
           <GenericBtn
-            buttonContent="Play Again"
-            buttonDataTestid="btn-play-again"
+            btnContent="Play Again"
+            btnDataTestid="btn-play-again"
+          />
+        </Link>
+        <Link to="/ranking">
+          <GenericBtn
+            btnContent="Ranking"
+            btnDataTestid="btn-ranking"
           />
         </Link>
       </section>
