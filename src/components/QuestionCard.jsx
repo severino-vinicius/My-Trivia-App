@@ -120,7 +120,10 @@ class QuestionCard extends Component {
                 data-testid={ conditionalCorrectAnwnser
                   ? 'correct-answer' : `wrong-answer-${questionCurrency}` }
                 key={ index }
-                onClick={ () => { this.wrongOrRight(element); } }
+                onClick={ () => {
+                  this.wrongOrRight(element);
+                  clearInterval(this.timerID);
+                } }
                 className={ conditionalCorrectAnwnser ? classNameRight : classNameWrong }
               >
                 { conditionalCorrectAnwnser ? questions.correct_answer : element }
